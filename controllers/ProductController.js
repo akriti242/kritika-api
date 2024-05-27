@@ -1,5 +1,5 @@
 const productModel = require('../models/Product')
-const cloudinary = require('cloudinary');
+const cloudinary = require('cloudinary').v2;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
 cloudinary.config({
@@ -12,10 +12,10 @@ class ProductController{
 
     static getAllProducts = async(req,res) => {
         try{
-            const allProducts = await productModel.find()
+            const products = await productModel.find()
             res.status(200).json({
                 success: true,
-                allProducts
+                products
             })
         }catch(err){
             res.send(err)
@@ -60,13 +60,13 @@ class ProductController{
     static createProduct = async(req,res) => {
         try{
             console.log(req.body)
-            console.log(req.files)
+            // console.log(req.files)
             const file = req.files.images
             const myCloud = await cloudinary.uploader.upload(file.tempFilePath,{
                 folder : 'userImage'
             })
 
-            const {name, description, price, stock, rating, category} = req.body
+            const {name, description, price, stock, rating, category} = req.body;
             const data = new productModel({
                 name: name,
                 description: description,
